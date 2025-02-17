@@ -1,0 +1,3 @@
+C:/Users/tsits/OneDrive - Dundalk Institute of Technology/Desktop/C++/CA1/cmake-build-debug/CMakeFiles/CA1.dir
+C:/Users/tsits/OneDrive - Dundalk Institute of Technology/Desktop/C++/CA1/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/tsits/OneDrive - Dundalk Institute of Technology/Desktop/C++/CA1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
