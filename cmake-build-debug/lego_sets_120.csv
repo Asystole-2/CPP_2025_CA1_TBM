@@ -14,7 +14,7 @@ LEGO_013,Heartlake Grand Hotel,Friends,1050,89.06
 LEGO_014,Temple of Airjitzu,Ninjago,4911,280.66
 LEGO_015,Creator Expert Ferris Wheel,Creator,1949,168.49
 LEGO_016,Sanctum Sanctorum,Marvel,332,231.87
-LEGO_017,Bugatti Chiron,Technic,1999,262.68
+LEGO_017Avengers Tower,Bugatti Chiron,Technic,1999,262.68
 LEGO_018,Family House,Creator,923,36.98
 LEGO_019,Hulkbuster: Ultron Edition,Marvel,4581,377.8
 LEGO_020,The Fortress,Minecraft,1731,192.03
@@ -26,8 +26,8 @@ LEGO_025,Passenger Train,City,4917,466.16
 LEGO_026,Destiny's Bounty,Ninjago,1162,366.06
 LEGO_027,Hogwarts Castle,Harry Potter,2273,17.01
 LEGO_028,Assembly Square,Creator,4747,287.09
-LEGO_029,Avengers Tower,Marvel,2566,80.24
-LEGO_030,Avengers Quinjet,Marvel,1762,210.35
+LEGO_029,,Marvel,2566,80.24
+LELEGO_074GO_030,Avengers Quinjet,Marvel,1762,210.35
 LEGO_031,Ultra Stealth Raider,Ninjago,1873,101.01
 LEGO_032,The Village,Minecraft,4713,419.57
 LEGO_033,Fire Brigade,City,4911,33.95
@@ -71,7 +71,7 @@ LEGO_070,The Burrow,Harry Potter,3858,116.15
 LEGO_071,Holiday Camper Van,City,4941,138.6
 LEGO_072,Heartlake City Park,Friends,2635,441.05
 LEGO_073,Zane’s Titan Mech Battle,Ninjago,3355,173.65
-LEGO_074,Hogsmeade Village Visit,Harry Potter,3056,329.13
+,Hogsmeade Village Visit,Harry Potter,3056,329.13
 LEGO_075,Jungle Dragon,Ninjago,2381,150.14
 LEGO_076,App-Controlled Transformation Vehicle,Technic,2318,194.32
 LEGO_077,Star Destroyer,Star Wars,4184,382.13

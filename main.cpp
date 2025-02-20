@@ -9,15 +9,19 @@ using namespace std;
 
 void readfile();
 
-void legosets();
-
 void display();
 
 void parse();
 
-int indexofvalue();
+int indexOfTheme();
 
-void displayLegomatchingSet_ID();
+int indexOfName();
+
+void displayLegoMatchingTheme();
+
+void displayLegoMatchingName();
+
+void menu();
 
 /*
  Formate: Set_ID,Set_Name,Theme,Piece_Count,Price
@@ -27,20 +31,12 @@ Marvel   Star Wars   Minecraft   Creator   City    Friends   Harry Potter
 Technic   Architecture   DC   Ideas   Super Mario   Disney   Jurassic World
 */
 //std::vector<std::tuple <int, std::string> > myArr;
-
-/*2.	Write a function that will accept two parameters: the vector of structs and a value for a particular field (of your choosing).  The function will search through the vector elements for the value (in a particular field) and will return the index (int) of the located element,
-or -1 if no match is found.  Use the returned index to access and display the contents of the struct, otherwise, display a not found message.
-
+/*
 3.	Write a function that will accept the vector of structs,
 iterate through the data loaded in stage 2 and accumulate a count of the number of rows that are a match for each of the unique values in a chosen column.
 For example, if you chose movie data then this function could return the number of movies of each genre (comedy, thriller, drama, etc.).
 This function should return a map containing all information.
 */
-
-int main() {
-    legosets();
-    return 0;
-}
 
 struct LegoSet {
     string setID;
@@ -92,7 +88,7 @@ void readfile(string filename, vector<LegoSet> &legosets) {
 
 void display(const vector<LegoSet> &legosets) {
     cout << "--------------------------------------------------------\n";
-    cout << "                   Lego Collection  \n";
+    cout << "|                   LEGO COLLECTION                    |\n";
     cout << "--------------------------------------------------------\n";
 
     for (const auto &set: legosets) {
@@ -106,12 +102,28 @@ void display(const vector<LegoSet> &legosets) {
     }
     cout << " End of Collection \n";
 }
-int indexofvalue(vector<LegoSet> &lego_sets, string &Set_ID) {
+
+int indexOfTheme(vector<LegoSet> &lego_sets, string &theme) {
     int index = -1;
 
     if (!lego_sets.empty()) {
         for (int i = 0; i < lego_sets.size(); i++) {
-            if (lego_sets[i].setID == Set_ID) {
+            if (lego_sets[i].theme == theme) {
+                index = i;
+            }
+        }
+    } else {
+        cout << " The vector is empty " << endl;
+    }
+
+    return index;
+}
+int indexOfName(vector<LegoSet> &lego_sets, string &setName) {
+    int index = -1;
+
+    if (!lego_sets.empty()) {
+        for (int i = 0; i < lego_sets.size(); i++) {
+            if (lego_sets[i].setName == setName) {
                 index = i;
             }
         }
@@ -122,15 +134,19 @@ int indexofvalue(vector<LegoSet> &lego_sets, string &Set_ID) {
     return index;
 }
 
-void displayLegomatchingSet_ID(vector<LegoSet> &lego_sets) {
-    string legoSet_ID;
-    cout << "Enter the ID for the lego set you are looking for: " << endl;
-    cin >> legoSet_ID;
-    int index = indexofvalue(lego_sets, legoSet_ID);
+void displayLegoMatchingTheme(vector<LegoSet> &lego_sets) {
+    string legoTheme;
+    cout << "* * * * * * * * * * * * * * * * * * *" << endl;
+    cout << "*            THEME SEARCH           *"  << endl;
+    cout << "* * * * * * * * * * * * * * * * * * *" << endl;
+    cout << "Enter the theme for the lego set you are looking for: " << endl;
+    cin.ignore();
+    getline(cin,legoTheme);
+    int index = indexOfTheme(lego_sets, legoTheme);
 
-    cout << "--------------------------------------------------------\n";
-    cout << "            Search result for: " << legoSet_ID << endl;
-    cout << "--------------------------------------------------------\n";
+    cout << "---------------------------------------------\n";
+    cout << "         Search result for: "<< legoTheme << endl;
+    cout << "---------------------------------------------\n";
 
     if (index > -1 && index <= lego_sets.size()) {
         if (!lego_sets.empty()) {
@@ -138,23 +154,86 @@ void displayLegomatchingSet_ID(vector<LegoSet> &lego_sets) {
             cout << " Theme: " << lego_sets[index].theme << "\n";
             cout << " Piece count: " <<lego_sets[index].pieceCount << "\n";
             cout << " Price: " << lego_sets[index].price << " euro\n";
-            cout << "--------------------------------------------------------\n";
+            cout << "-----------------------------\n";
         }
         else {
             cout << " The vector is empty " << endl;
         }
     } else {
-        cout << "Invalid set ID [index: " << index <<"]" << endl;
+        cout << "Invalid theme [index: " << index <<"]" << endl;
     }
 
 }
 
-void legosets() {
+void displayLegoMatchingName(vector<LegoSet> &lego_sets) {
+    string legoSetname;
+    cout << "* * * * * * * * * * * * * * * * * *" << endl;
+    cout << "*           NAME  SEARCH          *"  << endl;
+    cout << "* * * * * * * * * * * * * * * * * *" << endl;
+    cout << "Enter the name for the lego set you are looking for: " << endl;
+    cin.ignore();
+    getline(cin,legoSetname);
+    int index = indexOfName(lego_sets, legoSetname);
+
+    cout << "-------------------------------------\n";
+    cout << "         Search result for: " <<  endl;
+    cout << "         "<< legoSetname << endl;
+    cout << "-------------------------------------\n";
+
+    if (index > -1 && index <= lego_sets.size()) {
+        if (!lego_sets.empty()) {
+            cout << " Name: " << lego_sets[index].setName << "\n";
+            cout << " Theme: " << lego_sets[index].theme << "\n";
+            cout << " Piece count: " <<lego_sets[index].pieceCount << "\n";
+            cout << " Price: " << lego_sets[index].price << " euro\n";
+            cout << "-----------------------------\n";
+        }
+        else {
+            cout << " The vector is empty " << endl;
+        }
+    } else {
+        cout << "Invalid set name [index: " << index <<"]" << endl;
+    }
+
+}
+
+void menu(vector<LegoSet> &legosets) {
+    int choice;
+    do {
+        cout << "--------------------------------------------------\n";
+        cout << " *            LEGO COLLECTION MENU              * \n";
+        cout << "--------------------------------------------------\n";
+        cout << "         1. Display all Lego sets\n";
+        cout << "         2. Search for a Lego set by name\n";
+        cout << "         3. Search for a Lego set by theme\n";
+        cout << "         4. Exit\n";
+        cout << " Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                display(legosets);
+            break;
+            case 2:
+                displayLegoMatchingName(legosets);
+            break;
+            case 3:
+                displayLegoMatchingTheme(legosets);
+            break;
+            case 4:
+                cout << "Exiting the program.\n";
+            default:
+                cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 3);
+}
+
+int main() {
     vector<LegoSet> legosets;
     string filename = "lego_sets_120.csv";
     readfile(filename, legosets);
-    // display(legosets);
-    displayLegomatchingSet_ID(legosets);
+    menu(legosets);
+    return 0;
 }
 
 
