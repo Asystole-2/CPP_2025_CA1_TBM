@@ -4,6 +4,8 @@
 #include <vector>
 #include <fstream>
 #include <iomanip>
+#include <limits>
+#include <map>
 #include <set>
 using namespace std;
 
@@ -16,6 +18,8 @@ void parse();
 int indexOfTheme();
 
 int indexOfName();
+
+void displayThemeMap();
 
 void displayLegoMatchingTheme();
 
@@ -103,7 +107,30 @@ void display(const vector<LegoSet> &legosets) {
     cout << " End of Collection \n";
 }
 
-int indexOfName(vector<LegoSet> &lego_sets, string &setName) {
+map<string, int> themeMap(const vector<LegoSet> & legosets);
+
+void displayThemeMap(const vector<LegoSet> &legosets){
+    map <string, int> themes = themeMap(legosets);
+
+    cout << "<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>> "<< endl;
+    cout << "<              THEMES              >" << endl;
+    cout << "<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>> "<< endl;
+
+    for (const auto &[theme,count] : themes) {
+        cout <<"         > "<< theme <<": "<< count<< endl;
+    }
+    cout << "<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>> "<< endl;
+
+}
+ map<string,int> themeMap(const vector<LegoSet> &legosets) {
+    map<string,int > themeCount;
+    for (const auto &set: legosets) {
+        themeCount[set.theme]++;
+    }
+    return themeCount;
+}
+
+int indexOfName(const vector<LegoSet> &lego_sets, string &setName) {
     int index = -1;
 
     if (!lego_sets.empty()) {
@@ -119,7 +146,7 @@ int indexOfName(vector<LegoSet> &lego_sets, string &setName) {
     return index;
 }
 
-void displayLegoMatchingTheme(vector<LegoSet> &lego_sets) {
+void displayLegoMatchingTheme(const vector<LegoSet> &lego_sets) {
     string legoTheme;
     int count = 0;
     cout << "* * * * * * * * * * * * * * * * * * *" << endl;
@@ -150,7 +177,7 @@ void displayLegoMatchingTheme(vector<LegoSet> &lego_sets) {
     cout << "---------------------------------------------\n";
 }
 
-void displayLegoMatchingName(vector<LegoSet> &lego_sets) {
+void displayLegoMatchingName(const vector<LegoSet> &lego_sets) {
     string legoSetname;
     cout << "* * * * * * * * * * * * * * * * * *" << endl;
     cout << "*           NAME  SEARCH          *" << endl;
@@ -180,7 +207,7 @@ void displayLegoMatchingName(vector<LegoSet> &lego_sets) {
     }
 }
 
-void menu(vector<LegoSet> &legosets) {
+void menu(const vector<LegoSet> &legosets) {
     int choice;
     do {
         cout << "--------------------------------------------------\n";
@@ -188,11 +215,20 @@ void menu(vector<LegoSet> &legosets) {
         cout << "--------------------------------------------------\n";
         cout << "         1. Display all Lego sets\n";
         cout << "         2. Search for a Lego set by name\n";
-        cout << "         3. Search for a Lego set by theme\n";
-        cout << "         4. Exit\n";
+        cout << "         3. Theme Map\n";
+        cout << "         4. Search for a Lego set by theme\n";
+        cout << "         5. Exit\n";
         cout << " Enter your choice: ";
-        cin.ignore();
+
+        cin.clear();
+
         cin >> choice;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
 
         switch (choice) {
             case 1:
@@ -202,14 +238,19 @@ void menu(vector<LegoSet> &legosets) {
                 displayLegoMatchingName(legosets);
                 break;
             case 3:
+                displayThemeMap(legosets);
+            break;
+            case 4:
                 displayLegoMatchingTheme(legosets);
                 break;
-            case 4:
+            case 5:
                 cout << "Exiting the program.\n";
+                break;
             default:
                 cout << "Invalid choice. Please try again.\n";
+            break;
         }
-    } while (choice != 4);
+    } while (choice != 5);
 }
 
 int main() {
