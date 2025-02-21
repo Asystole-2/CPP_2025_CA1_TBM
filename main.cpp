@@ -191,6 +191,7 @@ void menu(vector<LegoSet> &legosets) {
         cout << "         3. Search for a Lego set by theme\n";
         cout << "         4. Exit\n";
         cout << " Enter your choice: ";
+        cin.ignore();
         cin >> choice;
 
         switch (choice) {
