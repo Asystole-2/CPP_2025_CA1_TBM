@@ -4,6 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <iomanip>
+#include <limits>
 #include <map>
 #include <set>
 using namespace std;
@@ -220,7 +221,15 @@ void menu(const vector<LegoSet> &legosets) {
         cout << " Enter your choice: ";
 
         cin.clear();
+
         cin >> choice;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
+
         switch (choice) {
             case 1:
                 display(legosets);
@@ -239,6 +248,7 @@ void menu(const vector<LegoSet> &legosets) {
                 break;
             default:
                 cout << "Invalid choice. Please try again.\n";
+            break;
         }
     } while (choice != 5);
 }
