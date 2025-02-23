@@ -340,7 +340,7 @@ void menu(vector<LegoSet> &legoSets) {
                 displayDescFloat(legoSets);
                 break;
             case 8:
-                cout << "Exiting the program.\n";
+                cout << "Exiting the program.......\n\n      bye bye :) \n";
                 break;
             default:
                 cout << "Invalid choice. Please try again.\n";
