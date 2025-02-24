@@ -6,7 +6,10 @@
 #include <fstream>
 #include <iomanip>
 #include <limits>
+#include <list>
 #include <map>
+#include <ranges>
+#include <windows.h>
 
 using namespace std;
 
@@ -31,6 +34,8 @@ void pieceCountInformation();
 void displayDescFloat();
 
 void displayAscFloat();
+
+void nameAndThemeFilter();
 
 void menu();
 
@@ -86,20 +91,21 @@ void display(const vector<LegoSet> &legoSets) {
     cout << "|                   LEGO COLLECTION                    |\n";
     cout << "--------------------------------------------------------\n";
 
+    SetConsoleOutputCP(1252);
     for (const auto &set: legoSets) {
         cout << " ID: " << set.setID << "\n";
         cout << " Name: " << set.setName << "\n";
         cout << " Theme: " << set.theme << "\n";
         cout << " Pieces: " << set.pieceCount << "\n";
         cout << fixed << std::setprecision(2);
-        cout << " Price: " << set.price << "\n";
+        cout << " Price: " << (char)128 << set.price << "\n";
         cout << "--------------------------------------------------------\n";
     }
     cout << " End of Collection \n";
 }
 
 void displayDescFloat(vector<LegoSet> &legoSets) {
-    auto func = [](LegoSet x, LegoSet y) { return x.price > y.price; };
+    auto func = [](const LegoSet& x, const LegoSet& y) { return x.price > y.price; };
     sort(legoSets.begin(), legoSets.end(), func);
 
     cout << "--------------------------------------------------------\n";
@@ -112,7 +118,7 @@ void displayDescFloat(vector<LegoSet> &legoSets) {
         cout << " Theme: " << set.theme << "\n";
         cout << " Pieces: " << set.pieceCount << "\n";
         cout << fixed << std::setprecision(2);
-        cout << " Price: " << set.price << "\n";
+        cout << " Price: " << (char)128 << set.price << "\n";
         cout << "--------------------------------------------------------\n";
     }
     cout << " End of Collection \n";
@@ -135,12 +141,11 @@ void displayAscFloat(vector<LegoSet> &legoSets) {
         cout << " Theme: " << set.theme << "\n";
         cout << " Pieces: " << set.pieceCount << "\n";
         cout << fixed << std::setprecision(2);
-        cout << " Price: " << set.price << "\n";
+        cout << " Price: " << (char)128 << set.price << "\n";
         cout << "--------------------------------------------------------\n";
     }
     cout << " End of Collection \n";
 }
-
 
 map<string, int> themeMap(const vector<LegoSet> &legoSets);
 
@@ -187,29 +192,35 @@ void displayLegoMatchingTheme(const vector<LegoSet> &lego_sets) {
     cout << "* * * * * * * * * * * * * * * * * * *" << endl;
     cout << "*            THEME SEARCH           *" << endl;
     cout << "* * * * * * * * * * * * * * * * * * *" << endl;
+    cout << "Enter 'cancel' to go back to menu "<< endl;
     cout << "Enter the theme for the lego set you are looking for: " << endl;
     cin.ignore();
     getline(cin, legoTheme);
-    cout << "---------------------------------------------\n";
-    cout << "         Search result for: " << legoTheme << endl;
-    cout << "---------------------------------------------\n";
 
-    for (int i = 0; i < lego_sets.size(); i++) {
-        if (lego_sets[i].theme == legoTheme) {
-            count++;
-            if (!lego_sets.empty()) {
-                cout << " ID: " << lego_sets[i].setID << endl;
-                cout << " Name: " << lego_sets[i].setName << "\n";
-                cout << " Piece count: " << lego_sets[i].pieceCount << "\n";
-                cout << " Price: " << lego_sets[i].price << " euro\n";
-                cout << "---------------------------------------------\n";
-            } else {
-                cout << " The vector is empty " << endl;
+    if (legoTheme != "cancel") {
+        cout << "---------------------------------------------\n";
+        cout << "         Search result for: " << legoTheme << endl;
+        cout << "---------------------------------------------\n";
+
+        for (int i = 0; i < lego_sets.size(); i++) {
+            if (lego_sets[i].theme == legoTheme) {
+                count++;
+                if (!lego_sets.empty()) {
+                    cout << " ID: " << lego_sets[i].setID << endl;
+                    cout << " Name: " << lego_sets[i].setName << "\n";
+                    cout << " Piece count: " << lego_sets[i].pieceCount << "\n";
+                    cout << " Price: " << (char)128 << lego_sets[i].price << " \n";
+                    cout << "---------------------------------------------\n";
+                } else {
+                    cout << " The vector is empty " << endl;
+                }
             }
         }
+        cout << "         " << count << " lego sets found" << endl;
+        cout << "---------------------------------------------\n";
+    }else {
+        cout << "Back to menu" << endl;
     }
-    cout << "         " << count << " lego sets found" << endl;
-    cout << "---------------------------------------------\n";
 }
 
 void displayLegoMatchingName(const vector<LegoSet> &lego_sets) {
@@ -217,28 +228,35 @@ void displayLegoMatchingName(const vector<LegoSet> &lego_sets) {
     cout << "* * * * * * * * * * * * * * * * * *" << endl;
     cout << "*           NAME  SEARCH          *" << endl;
     cout << "* * * * * * * * * * * * * * * * * *" << endl;
+    cout << "Enter 'cancel' to go back to menu "<< endl;
     cout << "Enter the name for the lego set you are looking for: " << endl;
     cin.ignore();
     getline(cin, legoSetName);
-    int index = indexOfName(lego_sets, legoSetName);
 
-    cout << "-------------------------------------\n";
-    cout << "         Search result for: " << endl;
-    cout << "         " << legoSetName << endl;
-    cout << "-------------------------------------\n";
+    if (legoSetName != "cancel") {
+        int index = indexOfName(lego_sets, legoSetName);
 
-    if (index > -1 && index <= lego_sets.size()) {
-        if (!lego_sets.empty()) {
-            cout << " ID: " << lego_sets[index].setID << endl;
-            cout << " Theme: " << lego_sets[index].theme << "\n";
-            cout << " Piece count: " << lego_sets[index].pieceCount << "\n";
-            cout << " Price: " << lego_sets[index].price << " euro\n";
-            cout << "-----------------------------\n";
+        cout << "-------------------------------------\n";
+        cout << "         Search result for: " << endl;
+        cout << "         " << legoSetName << endl;
+        cout << "-------------------------------------\n";
+
+        if (index > -1 && index <= lego_sets.size()) {
+            SetConsoleOutputCP(1252);
+            if (!lego_sets.empty()) {
+                cout << " ID: " << lego_sets[index].setID << endl;
+                cout << " Theme: " << lego_sets[index].theme << "\n";
+                cout << " Piece count: " << lego_sets[index].pieceCount << "\n";
+                cout << " Price: " << (char)128 << lego_sets[index].price << "\n";
+                cout << "-----------------------------\n";
+            } else {
+                cout << " The vector is empty " << endl;
+            }
         } else {
-            cout << " The vector is empty " << endl;
+            cout << "Invalid set name [index: " << index << "]" << endl;
         }
-    } else {
-        cout << "Invalid set name [index: " << index << "]" << endl;
+    }else {
+        cout << "Back to menu" << endl;
     }
 }
 
@@ -266,7 +284,7 @@ void pieceCountInformation(const vector<LegoSet> &lego_sets) {
             cout << "           ----------------------------------------" << endl;
             cout << "                  " << lego_set.setName << "\n";
             cout << "                  " << lego_set.theme << "\n";
-            cout << "                  " << lego_set.price << " euro\n";
+            cout << "                  "<< (char)128  << lego_set.price << " \n";
             cout << "           -----------------------------------------" << endl;
             cout << "            Contains:   * " << leastPieces << " pieces *" << endl;
             cout << "           ----------------------------------------" << endl;
@@ -277,7 +295,7 @@ void pieceCountInformation(const vector<LegoSet> &lego_sets) {
             cout << "           ----------------------------------------" << endl;
             cout << "                " << lego_set.setName << "\n";
             cout << "                " << lego_set.theme << "\n";
-            cout << "                " << lego_set.price << " euro\n";
+            cout << "                " << (char)128 <<lego_set.price << " euro\n";
             cout << "           ---------------------------------------" << endl;
             cout << "            Contains:   * " << mostPieces << " pieces *" << endl;
             cout << "           ----------------------------------------" << endl;
@@ -290,6 +308,55 @@ void pieceCountInformation(const vector<LegoSet> &lego_sets) {
     cout << "\n###########################################################\n";
 }
 
+list<LegoSet> nameAndThemeFilter(const vector<LegoSet> &lego_sets, const string &filter) {
+
+list<LegoSet> matchingLego_sets ;
+if (!lego_sets.empty()) {
+    for (const auto &lego_set: lego_sets) {
+        if (lego_set.setName.find(filter) != string::npos || lego_set.theme.find(lego_set.setName) != string::npos) {
+            matchingLego_sets.push_back(lego_set);
+        }
+    }
+}
+else {
+    cout << "ERROR: The vector is empty " << endl;
+}
+
+return matchingLego_sets;
+}
+
+void displayFilteredSets(const vector<LegoSet> &lego_sets) {
+    cout << "--------------------------------------------------------\n";
+    cout << "|                    GENERAL SEARCH                     |\n";
+    cout << "--------------------------------------------------------\n";
+
+    cout << "Enter 'cancel' to go back to menu "<< endl;
+    cout << "Enter the string to filter: "<< endl;
+    string filter;
+    cin.ignore();
+    getline(cin, filter);
+
+    if (filter != "cancel") {
+        const list <LegoSet> filtered_lego_sets = nameAndThemeFilter(lego_sets, filter);
+
+        SetConsoleOutputCP(1252);
+        cout << "--------------------------------------------------------\n";
+        cout << "|                    SEARCH RESULTS                     |\n";
+        cout << "--------------------------------------------------------\n";
+        for (const auto &lego_set: filtered_lego_sets) {
+            cout << " ID: " << lego_set.setID << "\n";
+            cout << " Name: " << lego_set.setName << "\n";
+            cout << " Theme: " << lego_set.theme << "\n";
+            cout << " Pieces: " << lego_set.pieceCount << "\n";
+            cout << fixed << std::setprecision(2);
+            cout << " Price: " << (char)128 << lego_set.price << "\n";
+            cout << "--------------------------------------------------------\n";
+        }
+    }else {
+        cout << "Back to menu" << endl;
+    }
+}
+
 void menu(vector<LegoSet> &legoSets) {
     int choice;
     do {
@@ -297,14 +364,14 @@ void menu(vector<LegoSet> &legoSets) {
         cout << " *            LEGO COLLECTION MENU              * \n";
         cout << "--------------------------------------------------\n\n";
         cout << "         1. Display all Lego sets\n";
-        cout << "         2. Search for a Lego set by name\n";
-        cout << "         3. Theme Map\n";
-        cout << "         4. Search for a Lego set by theme\n";
-        cout << "         5. Piece Count Insights\n";
-        cout << "         6. Prices in ascending order\n";
-        cout << "         7. Prices in descending order\n";
-        cout << "         8. Exit\n";
-
+        cout << "         2. Filter Lego set \n";
+        cout << "         3. Search for a Lego set by name\n";
+        cout << "         4. Theme Map\n";
+        cout << "         5. Search for a Lego set by theme\n";
+        cout << "         6. Piece Count Insights\n";
+        cout << "         7. Prices in ascending order\n";
+        cout << "         8. Prices in descending order\n";
+        cout << "         9. Exit\n";
         cout << " Enter your choice: ";
 
         cin.clear();
@@ -322,31 +389,34 @@ void menu(vector<LegoSet> &legoSets) {
                 display(legoSets);
                 break;
             case 2:
+                displayFilteredSets(legoSets);
+               break;
+            case 3:
                 displayLegoMatchingName(legoSets);
                 break;
-            case 3:
+            case 4:
                 displayThemeMap(legoSets);
                 break;
-            case 4:
+            case 5:
                 displayLegoMatchingTheme(legoSets);
                 break;
-            case 5:
+            case 6:
                 pieceCountInformation(legoSets);
                 break;
-            case 6:
+            case 7:
                 displayAscFloat(legoSets);
                 break;
-            case 7:
+            case 8:
                 displayDescFloat(legoSets);
                 break;
-            case 8:
-                cout << "Exiting the program.......\n\n      bye bye :) \n";
+            case 9:
+                cout << "Exiting the program.\n";
                 break;
             default:
                 cout << "Invalid choice. Please try again.\n";
                 break;
         }
-    } while (choice != 8);
+    } while (choice != 9);
 }
 
 int main() {
@@ -358,25 +428,22 @@ int main() {
 }
 
 /*
-6.	Write a function that will search through the data and return a list of all items that match or partially match a given text input.
-For example, all movies that contain the text “The” in the title. Iterators must be used for this function.
-
-*/
-
-
-/*
  Total amount of pieces:252,702
   Highest: 5923
   Lowest: 830
-  numbers = [
-2420, 4708, 4062, 378, 2016, 143, 4535, 1969, 3347, 4726, 1186, 2935, 1050, 4911, 1949,
-332, 1999, 923, 4581, 1731, 2259, 3636, 2554, 2962, 4917, 1162, 2273, 4747, 2566, 1762,
-1873, 4713, 4911, 735, 3517, 3151, 4571, 2958, 170, 3606, 4050, 191, 2279, 3180, 1899,
-3271, 3074, 1174, 360, 2858, 1316, 4123, 3121, 2571, 749, 2803, 347, 4241, 951, 1970,
-838, 4112, 4951, 3518, 2568, 4533, 1804, 4953, 3202, 3858, 4941, 2635, 3355, 3056, 2381,
-2318, 4184, 3581, 572, 54, 3036, 3200, 480, 2207, 1360, 1677, 1070, 922, 1197, 2079,
-5923, 231, 2352, 3210, 878, 3120, 565, 2354, 1125, 830
-]
+
+      numbers = [
+    2420, 4708, 4062, 378, 2016, 143, 4535, 1969, 3347, 4726, 1186, 2935, 1050, 4911, 1949,
+    332, 1999, 923, 4581, 1731, 2259, 3636, 2554, 2962, 4917, 1162, 2273, 4747, 2566, 1762,
+    1873, 4713, 4911, 735, 3517, 3151, 4571, 2958, 170, 3606, 4050, 191, 2279, 3180, 1899,
+    3271, 3074, 1174, 360, 2858, 1316, 4123, 3121, 2571, 749, 2803, 347, 4241, 951, 1970,
+    838, 4112, 4951, 3518, 2568, 4533, 1804, 4953, 3202, 3858, 4941, 2635, 3355, 3056, 2381,
+    2318, 4184, 3581, 572, 54, 3036, 3200, 480, 2207, 1360, 1677, 1070, 922, 1197, 2079,
+    5923, 231, 2352, 3210, 878, 3120, 565, 2354, 1125, 830
+    ]
+
+
 */
 
+// Github: https://github.com/Asystole-2/CPP_2025_CA1_TBM.git
 //References:    https://www.geeksforgeeks.org/sort-c-stl/
